@@ -1,0 +1,193 @@
+# ============================================================
+# mmpbsa_cphmd configuration
+# ============================================================
+
+input:
+
+  topology: ../run_2.tpr
+  trajectory: cluster_fit.xtc
+  energy: ../run_2.edr
+
+  lambda_directory: output/lambda
+
+
+# ------------------------------------------------------------
+# Sampling
+# ------------------------------------------------------------
+
+analysis:
+
+  # Ignore first 100 ns
+  equilibration_ns: 100.0
+
+  # Analyze one trajectory frame every 100 ps
+  frame_interval_ps: 1000.0
+
+
+# ------------------------------------------------------------
+# Ligand
+# ------------------------------------------------------------
+
+ligand:
+
+  selection: "segid A or segid B or segid C "
+
+  # Heavy atom contact cutoff
+  contact_cutoff_nm: 0.45
+
+
+# ------------------------------------------------------------
+# Binding-site titratable residues
+#
+# ONLY these residues are allowed to define different
+# protonation-state groups.
+#
+# Replace these with your actual residues.
+# ------------------------------------------------------------
+
+binding_site_residues:
+
+  - chain: A
+    resid: 225
+  - chain: A
+    resid: 234
+  - chain: B
+    resid: 312
+  - chain: B
+    resid: 311
+  - chain: D
+    resid: 301
+  - chain: D
+    resid: 300
+  - chain: D
+    resid: 312
+  - chain: D
+    resid: 119
+  - chain: D
+    resid: 130
+
+
+# ------------------------------------------------------------
+# Histidine state mapping
+#
+# CpHMD HSPT has 3 lambda coordinates corresponding to
+# state 1, state 2 and state 3.
+#
+# This mapping should be checked against your force-field
+# residue definitions.
+# ------------------------------------------------------------
+
+histidine_states:
+
+  1: HSP
+  2: HSD
+  3: HSE
+
+
+# ------------------------------------------------------------
+# Residue names for binary states
+# ------------------------------------------------------------
+
+binary_states:
+  ASP:
+    protonated: ASPP
+    deprotonated: ASP
+
+  GLU:
+    protonated: GLUP
+    deprotonated: GLU
+
+  LYS:
+    protonated: LYS
+    deprotonated: LYN
+
+  ARG:
+    protonated: ARG
+    deprotonated: ARN
+
+  LIG:
+    protonated: LIP
+    deprotonated: LIG
+
+
+# ------------------------------------------------------------
+# Hydrogens to remove for each state
+#
+# IMPORTANT:
+# Adjust these atom names to the actual CHARMM36m
+# CpHMD residue definitions in your force field.
+# ------------------------------------------------------------
+
+hydrogens:
+
+  ASP:
+    protonated:
+      remove: []
+
+    deprotonated:
+      remove:
+        - HD2
+
+  GLU:
+    protonated:
+      remove: []
+
+    deprotonated:
+      remove:
+        - HE2
+
+  LYS:
+    protonated:
+      remove: []
+
+    deprotonated:
+      remove:
+        - HZ3
+
+  ARG:
+    protonated:
+      remove: []
+
+    deprotonated:
+      remove: []
+
+  HIS:
+
+    HSP:
+      remove: []
+
+    HSD:
+      remove:
+        - HE2
+
+    HSE:
+      remove:
+        - HD1
+
+  LIG:
+    protonated:
+      remove: []
+    deprotonated: 
+      remove:
+        - H1
+
+
+# ------------------------------------------------------------
+# GROMACS
+# ------------------------------------------------------------
+
+gromacs:
+
+  executable: gmx
+
+  force_field: charmm36-jul2022
+  water_model: tip3p
+
+
+# ------------------------------------------------------------
+# Output
+# ------------------------------------------------------------
+
+output:
+
+  directory: output
